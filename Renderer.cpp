@@ -25,7 +25,7 @@ void Renderer::initialize()
     {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
-        return -1;
+        throw std::logic_error("tyœ?");
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -33,7 +33,7 @@ void Renderer::initialize()
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
+        throw std::logic_error("tyœ?");
     }
 
     glEnable(GL_DEPTH_TEST);
