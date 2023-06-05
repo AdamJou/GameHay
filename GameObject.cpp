@@ -1,6 +1,10 @@
 #include "GameObject.h"
-GameObject::GameObject(vec3 pos, vec4 col, float* vert, float* indi) : position(pos), color(col)
+GameObject::GameObject(vec3 pos, vec4 col, vec3 scal) : position(pos), color(col), scale(scal)
+{}
+
+GameObject::GameObject(GameObject& A)
 {
-	vertices = vert;
-	indices = indi;
+	position = A.getPos();
+	color = A.getColor();
+	scale = A.getScale();
 }

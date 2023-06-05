@@ -1,6 +1,11 @@
 #include "Renderer.h"
 using namespace GameEngine;
 
+unsigned int vertexBufferId;
+unsigned int vertexArrayId;
+unsigned int elementBufferId;
+
+
 void Renderer::createWindow(unsigned int width, unsigned int height)
 {
 	void framebuffer_size_callback(GLFWwindow * window, int width, int height);
@@ -18,7 +23,7 @@ void Renderer::createWindow(unsigned int width, unsigned int height)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Przeksztalcenia", NULL, NULL);
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Przeksztalcenia", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -66,7 +71,7 @@ void Renderer::initialize()
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
     // link shaders
-    unsigned int shaderProgram = glCreateProgram();
+    shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
@@ -144,4 +149,73 @@ const char* fragmentShader = R"glsl(
 void Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void Renderer::initializeQube(const float* Qube, unsigned int* Indices, int qubeSize, int indicesSize) {
+    glGenVertexArrays(1, &vertexArrayId);
+    glGenBuffers(1, &vertexBufferId);
+    glGenBuffers(1, &elementBufferId);
+    glBindVertexArray(vertexArrayId);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+    glBufferData(GL_ARRAY_BUFFER, qubeSize * sizeof(float), Qube, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferId);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize * sizeof(unsigned int), Indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //glBindVertexArray(0);
+
+    glfwSetTime(0);
+    glfwSwapInterval(1);
+}
+
+
+void Renderer::addObject(GameObject* obj)
+{
+    listOfObjects.push_back(obj);
+}
+
+void Renderer::drawFrame()
+{
+
+    glClearColor(0.6f, 0.6f, 0.8f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glUseProgram(shaderProgram);
+    glBindVertexArray(vertexArrayId);
+
+
+
+    glm::mat4 ProjMatrix = glm::perspective(glm::radians(45.0f), static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT), 0.01f, 100.0f);
+    glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(ProjMatrix));
+
+    glm::mat4 ViewMatrix = glm::lookAt(camera.cameraPosition, camera.centerOfGrid, camera.upDirection); // Patrzenie na planszê od góry
+    glUniformMatrix4fv(3, 1, GL_FALSE, glm::value_ptr(ViewMatrix));
+    glUniformMatrix4fv(4, 1, GL_FALSE, glm::value_ptr(glm::mat4(0.0f)));
+
+    for (int a = 0; a < listOfObjects.size(); a++)
+    {
+        glm::mat4 ModelMatrix = glm::translate(glm::mat4(1.0f), listOfObjects[a]->getPos());
+        ModelMatrix = glm::scale(ModelMatrix, listOfObjects[a]->getScale());
+        glUniformMatrix4fv(4, 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+
+        glUniform4f(1, listOfObjects[a]->getColor().x, listOfObjects[a]->getColor().y, listOfObjects[a]->getColor().z, 1.0f); // Unikalny kolor dla ka¿dej kostki
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    }
+
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+}
+
+GameEngine::Renderer::~Renderer()
+{
+    glDeleteVertexArrays(1, &vertexArrayId);
+    glDeleteBuffers(1, &vertexBufferId);
+    glDeleteBuffers(1, &elementBufferId);
+    glDeleteProgram(shaderProgram);
+ 
+    glfwTerminate();
 }
