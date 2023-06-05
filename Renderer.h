@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include<vector>
 #include "GameObject.h"
+#include "Camera.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -16,21 +17,25 @@ namespace GameEngine {
 	class Renderer
 	{
 	private:
-		std::vector<GameObject> listOfObjects;
+		unsigned int shaderProgram, vertexBufferId, vertexArrayId, elementBufferId;
+		std::vector<GameObject*> listOfObjects;
 		//static int instance;
 		const char* vertexShaderSource;
 		const char* fragmentShaderSource;
 		unsigned int SCREEN_WIDTH;
 		unsigned int SCREEN_HEIGHT;
-		unsigned int VertexBufferId, VertexArrayId, ElementBufferId;
 		static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	public:
+		GLFWwindow* window;
+		Camera camera;
 		Renderer(const char*, const char*);
 		Renderer();
 		void createWindow(unsigned int, unsigned int);
 		void initialize();
-		void initializeObject();
-
+		void initializeQube(const float* Qube,unsigned int* Indices, int qubeSize, int indicesSize);
+		void addObject(GameObject* obj);
+		void drawFrame();
+		~Renderer();
 	};
 
 	//int Renderer::instance = 0;
