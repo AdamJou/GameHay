@@ -2,6 +2,8 @@
 
    glm::vec3 BoxCollider::Intersects(const BoxCollider& other) const {
     // Check for intersection on the x, y, and z axes
+       if(!other.isActive) 
+           return glm::vec3(0.0f, 0.0f, 0.0f);
     if ((minExtents.x <= other.maxExtents.x && maxExtents.x >= other.minExtents.x) &&
         (minExtents.y <= other.maxExtents.y && maxExtents.y >= other.minExtents.y) &&
         (minExtents.z <= other.maxExtents.z && maxExtents.z >= other.minExtents.z))

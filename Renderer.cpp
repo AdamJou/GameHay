@@ -110,6 +110,7 @@ Renderer::Renderer() {
 	   FragColor = TriangleColor;
 	}
 	)glsl";
+    BgColor = vec4(0.6f, 0.6f, 0.8f, 1.0f);
 }
 
 Renderer::Renderer(
@@ -138,6 +139,7 @@ const char* fragmentShader = R"glsl(
 	}
 	)glsl") 
 {
+    BgColor = vec4(0.6f, 0.6f, 0.8f, 1.0f);
 	//if (instance > 0) throw std::logic_error("Only one instance allowed");
 	//instance++;
 	vertexShaderSource = vertexShader;
@@ -169,7 +171,6 @@ void Renderer::initializeQube(const float* Qube, unsigned int* Indices, int qube
     //glBindBuffer(GL_ARRAY_BUFFER, 0);
     //glBindVertexArray(0);
 
-    glfwSetTime(0);
     glfwSwapInterval(1);
 }
 
@@ -182,7 +183,7 @@ void Renderer::addObject(GameObject* obj)
 void Renderer::drawFrame()
 {
 
-    glClearColor(0.6f, 0.6f, 0.8f, 1.0f);
+    glClearColor(BgColor.r,BgColor.g,BgColor.b,BgColor.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(shaderProgram);
     glBindVertexArray(vertexArrayId);
