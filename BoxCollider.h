@@ -6,7 +6,7 @@ class BoxCollider: public GameObject {
 public:
     glm::vec3 minExtents;  // The minimum extents of the box (bottom-left corner)
     glm::vec3 maxExtents;  // The maximum extents of the box (top-right corner)
-
+    bool isActive;
     // Constructor
     BoxCollider(GameObject A, const glm::vec3& minExtents, const glm::vec3& maxExtents)
         : GameObject(A), minExtents(minExtents), maxExtents(maxExtents) {}

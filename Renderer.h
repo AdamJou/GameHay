@@ -26,6 +26,7 @@ namespace GameEngine {
 		unsigned int SCREEN_HEIGHT;
 		static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	public:
+		vec4 BgColor;
 		GLFWwindow* window;
 		Camera camera;
 		Renderer(const char*, const char*);
