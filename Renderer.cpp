@@ -23,12 +23,12 @@ void Renderer::createWindow(unsigned int width, unsigned int height)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Przeksztalcenia", NULL, NULL);
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hay", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
-        throw std::logic_error("tyœ?");
+        throw std::logic_error("tyÅ“?");
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -36,7 +36,7 @@ void Renderer::createWindow(unsigned int width, unsigned int height)
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        throw std::logic_error("tyœ?");
+        throw std::logic_error("tyÅ“?");
     }
 
     glEnable(GL_DEPTH_TEST);
@@ -193,7 +193,7 @@ void Renderer::drawFrame()
     glm::mat4 ProjMatrix = glm::perspective(glm::radians(45.0f), static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT), 0.01f, 100.0f);
     glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(ProjMatrix));
 
-    glm::mat4 ViewMatrix = glm::lookAt(camera.cameraPosition, camera.centerOfGrid, camera.upDirection); // Patrzenie na planszê od góry
+    glm::mat4 ViewMatrix = glm::lookAt(camera.cameraPosition, camera.centerOfGrid, camera.upDirection); // Patrzenie na planszÃª od gÃ³ry
     glUniformMatrix4fv(3, 1, GL_FALSE, glm::value_ptr(ViewMatrix));
     glUniformMatrix4fv(4, 1, GL_FALSE, glm::value_ptr(glm::mat4(0.0f)));
 
@@ -203,7 +203,7 @@ void Renderer::drawFrame()
         ModelMatrix = glm::scale(ModelMatrix, listOfObjects[a]->getScale());
         glUniformMatrix4fv(4, 1, GL_FALSE, glm::value_ptr(ModelMatrix));
 
-        glUniform4f(1, listOfObjects[a]->getColor().x, listOfObjects[a]->getColor().y, listOfObjects[a]->getColor().z, 1.0f); // Unikalny kolor dla ka¿dej kostki
+        glUniform4f(1, listOfObjects[a]->getColor().x, listOfObjects[a]->getColor().y, listOfObjects[a]->getColor().z, 1.0f); // Unikalny kolor dla kaÂ¿dej kostki
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     }
 
